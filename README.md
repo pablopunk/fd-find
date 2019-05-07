@@ -1,4 +1,6 @@
-# fd-install
+# fd-find
+
+> WIP
 
 <p align="center">
   <a href="https://github.com/pablopunk/miny"><img src="https://img.shields.io/badge/made_with-miny-1eced8.svg" /> </a>
