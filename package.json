@@ -1,0 +1,49 @@
+{
+  "name": "fd-find",
+  "description": "Install fd command easily",
+  "version": "0.0.1",
+  "author": "Pablo Varela <pablovarela182@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/pablopunk/fd-install/issues",
+    "email": "pablovarela182@gmail.com"
+  },
+  "contributors": [
+    "Pablo Varela <pablovarela182@gmail.com>"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "prettier": "*",
+    "pretty-quick": "*",
+    "husky": "*"
+  },
+  "homepage": "https://github.com/pablopunk/fd-install",
+  "keywords": [
+    "fd",
+    "find",
+    "command",
+    "install",
+    "easy",
+    "mac",
+    "linux"
+  ],
+  "license": "MIT",
+  "main": "cli.js",
+  "bin": "cli.js",
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pablopunk/fd-install"
+  },
+  "scripts": {
+    "lint": "standard"
+  }
+}
