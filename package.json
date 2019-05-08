@@ -27,8 +27,10 @@
     "linux"
   ],
   "license": "MIT",
-  "main": "cli.js",
-  "bin": "cli.js",
+  "main": "cli",
+  "bin": {
+    "fd": "cli"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"

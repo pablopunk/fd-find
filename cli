@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ -f dist/fd ]; then
+  dist/fd $@
+else
+  node download.js
+fi
