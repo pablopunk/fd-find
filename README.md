@@ -1,7 +1,5 @@
 # fd-find
 
-> WIP
-
 <p align="center">
   <a href="https://github.com/pablopunk/miny"><img src="https://img.shields.io/badge/made_with-miny-1eced8.svg" /> </a>
   <a href="https://www.npmjs.com/package/fd-install"><img src="https://img.shields.io/npm/dt/fd-install.svg" /></a>
@@ -13,6 +11,8 @@
 
 ## Install
 
+It will download and install the latest official release [from github](https://github.com/sharkdp/fd/releases).
+
 ```sh
 npm install -g fd-find
 ```
@@ -20,7 +20,7 @@ npm install -g fd-find
 ## Usage
 
 ```bash
-$ fd
+$ fd --help
 ```
 
 ## License
