@@ -29,7 +29,7 @@
   "license": "MIT",
   "main": "cli",
   "bin": {
-    "fd": "cli"
+    "fd": "dist/fd"
   },
   "husky": {
     "hooks": {
@@ -46,6 +46,6 @@
     "url": "https://github.com/pablopunk/fd-install"
   },
   "scripts": {
-    "lint": "standard"
+    "postinstall": "node download.js"
   }
 }

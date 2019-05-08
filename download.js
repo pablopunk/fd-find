@@ -26,22 +26,21 @@ const chooseAsset = function(assets) {
 }
 
 const downloadAsset = asset => {
-  const folderName = asset.name.replace('.tar.gz', '')
+  const distFolder = `${__dirname}/dist`
+  const untarFolder = `${distFolder}/${asset.name.replace('.tar.gz', '')}`
 
   exec(
     `
-    mkdir -p dist && \
-    wget ${asset.browser_download_url} -O dist/download.tar.gz && \
-    tar xzf dist/download.tar.gz -C dist/ && \
-    mv dist/${folderName}/fd dist/fd && \
-    rm -rf dist/${folderName} dist/download.tar.gz
+    mkdir -p ${distFolder} && \
+    wget ${asset.browser_download_url} -O ${distFolder}/download.tar.gz && \
+    tar xzf ${distFolder}/download.tar.gz -C ${distFolder}/ && \
+    mv ${untarFolder}/fd ${distFolder}/fd && \
+    rm -rf ${untarFolder} ${distFolder}/download.tar.gz
   `,
     error => {
       if (error) {
         throw error
       }
-
-      console.log('Downloaded fd. Run fd again to use it.')
     }
   )
 }

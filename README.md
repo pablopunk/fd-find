@@ -19,8 +19,6 @@ npm install -g fd-find
 
 ## Usage
 
-On the first run, it will download and install the latest official release [from github](https://github.com/sharkdp/fd/releases)
-
 ```bash
 $ fd
 ```
