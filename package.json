@@ -33,7 +33,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "pretty-quick --staged && echo 'echo fd failed to install, please install it again' > dist/fd"
     }
   },
   "prettier": {

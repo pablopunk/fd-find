@@ -4,19 +4,17 @@ const { exec } = require('child_process')
 
 const platform = os.platform()
 
-const chooseAsset = function(assets) {
-  let asset
+const platformFiles = {
+  linux: 'x86_64-unknown-linux-gnu',
+  darwin: 'apple-darwin'
+}
 
-  switch (platform) {
-    case 'linux':
-      asset = assets.find(_ => _.name.includes('x86_64-unknown-linux-gnu'))
-      break
-    case 'darwin':
-      asset = assets.find(_ => _.name.includes('apple-darwin'))
-      break
-    default:
-      throw new Error(`Unknown platform ${platform}`)
+const chooseAsset = function(assets) {
+  if (!platformFiles.hasOwnProperty(platform)) {
+    throw new Error(`Couldn't find any asset for platform '${platform}''`)
   }
+
+  const asset = assets.find(_ => _.name.includes(platformFiles[platform]))
 
   if (!asset) {
     throw new Error(`Couldn't find any asset for platform '${platform}''`)
