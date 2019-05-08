@@ -46,6 +46,6 @@
     "url": "https://github.com/pablopunk/fd-install"
   },
   "scripts": {
-    "preinstall": "node download.js"
+    "postinstall": "node download.js"
   }
 }
