@@ -61,8 +61,6 @@ const req = request(
   res => {
     let data = ''
 
-    console.log(res.statusCode)
-
     res.on('data', _ => (data += _))
     res.on('end', _ => {
       let { assets } = JSON.parse(data)
