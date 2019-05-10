@@ -4,7 +4,7 @@
   "version": "1.0.4",
   "author": "Pablo Varela <pablovarela182@gmail.com>",
   "bugs": {
-    "url": "https://github.com/pablopunk/fd-install/issues",
+    "url": "https://github.com/pablopunk/fd-find/issues",
     "email": "pablovarela182@gmail.com"
   },
   "contributors": [
@@ -16,7 +16,7 @@
     "pretty-quick": "*",
     "husky": "*"
   },
-  "homepage": "https://github.com/pablopunk/fd-install",
+  "homepage": "https://github.com/pablopunk/fd-find",
   "keywords": [
     "fd",
     "find",
@@ -43,7 +43,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pablopunk/fd-install"
+    "url": "https://github.com/pablopunk/fd-find"
   },
   "scripts": {
     "postinstall": "node download.js"
