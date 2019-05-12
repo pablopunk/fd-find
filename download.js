@@ -9,7 +9,7 @@ const platformFiles = {
   darwin: 'apple-darwin'
 }
 
-const chooseAsset = function(assets) {
+const chooseAsset = assets => {
   if (!platformFiles.hasOwnProperty(platform)) {
     throw new Error(`Couldn't find any asset for platform '${platform}''`)
   }
