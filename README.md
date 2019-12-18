@@ -29,6 +29,8 @@ MIT
 
 ## Author
 
+More at [pablo.pink](https://pablo.pink)
+
 | ![me](https://gravatar.com/avatar/fa50aeff0ddd6e63273a068b04353d9d?size=100) |
 | ---------------------------------------------------------------------------- |
-| [Pablo Varela](https://pablo.life)                                           |
+| [Pablo Varela](https://pablo.pink)                                           |
