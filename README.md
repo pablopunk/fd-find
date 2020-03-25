@@ -23,6 +23,15 @@ npm install -g fd-find
 $ fd --help
 ```
 
+## Docker
+
+You'll need the `--unsafe-perm` option on `npm`. Check this example:
+
+```
+FROM mhart/alpine-node:12
+RUN npm i -g fd-find --unsafe-perm
+```
+
 ## License
 
 MIT
