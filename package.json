@@ -1,22 +1,7 @@
 {
   "name": "fd-find",
-  "description": "fd command as an npm package",
   "version": "1.0.7",
-  "author": "Pablo Varela <pablovarela182@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/pablopunk/fd-find/issues",
-    "email": "pablovarela182@gmail.com"
-  },
-  "contributors": [
-    "Pablo Varela <pablovarela182@gmail.com>"
-  ],
-  "dependencies": {},
-  "devDependencies": {
-    "prettier": "*",
-    "pretty-quick": "*",
-    "husky": "*"
-  },
-  "homepage": "https://github.com/pablopunk/fd-find",
+  "description": "fd command as an npm package",
   "keywords": [
     "fd",
     "find",
@@ -26,26 +11,42 @@
     "mac",
     "linux"
   ],
+  "homepage": "https://github.com/pablopunk/fd-find",
+  "bugs": {
+    "url": "https://github.com/pablopunk/fd-find/issues",
+    "email": "pablovarela182@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pablopunk/fd-find"
+  },
   "license": "MIT",
+  "author": "Pablo Varela <pablovarela182@gmail.com>",
+  "contributors": [
+    "Pablo Varela <pablovarela182@gmail.com>"
+  ],
   "main": "cli",
   "bin": {
     "fd": "dist/fd"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged && echo 'echo fd failed to install, please install it again' > dist/fd"
-    }
+  "scripts": {
+    "postinstall": "node download.js",
+    "prepare": "husky install"
   },
   "prettier": {
     "semi": false,
     "singleQuote": true,
     "tabWidth": 2
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pablopunk/fd-find"
+  "dependencies": {
+    "command-exists": "^1.0.0"
   },
-  "scripts": {
-    "postinstall": "node download.js"
+  "devDependencies": {
+    "husky": ">=7.0.0",
+    "prettier": "*",
+    "pretty-quick": "*"
+  },
+  "engine": {
+    "node": ">=7.10.1"
   }
 }
