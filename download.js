@@ -1,31 +1,43 @@
-const { request } = require('https')
-const os = require('os')
-const { exec } = require('child_process')
+const { request } = require("https");
+const os = require("os");
+const { exec } = require("child_process");
 
-const platform = os.platform()
+const platform = os.platform();
 
 const platformFiles = {
-  linux: 'x86_64-unknown-linux-gnu',
-  darwin: 'apple-darwin'
-}
+  linux: "x86_64-unknown-linux-gnu",
+  darwin: "apple-darwin",
+};
 
-const chooseAsset = assets => {
+const commandExists = (cmd) => {
+  return new Promise((resolve, _reject) => {
+    exec(
+      `command -v ${cmd} >/dev/null 2>&1 || { echo >&2 "false"; }`,
+      (error, _stdout, stderr) => {
+        const exists = stderr.trim() !== "false" && !error;
+        resolve(exists);
+      }
+    );
+  });
+};
+
+const chooseAsset = (assets) => {
   if (!platformFiles.hasOwnProperty(platform)) {
-    throw new Error(`Couldn't find any asset for platform '${platform}''`)
+    throw new Error(`Couldn't find any asset for platform '${platform}'`);
   }
 
-  const asset = assets.find(_ => _.name.includes(platformFiles[platform]))
+  const asset = assets.find((_) => _.name.includes(platformFiles[platform]));
 
   if (!asset) {
-    throw new Error(`Couldn't find any asset for platform '${platform}''`)
+    throw new Error(`Couldn't find any asset for platform '${platform}'`);
   }
 
-  return asset
-}
+  return asset;
+};
 
-const downloadAsset = asset => {
-  const distFolder = `${__dirname}/dist`
-  const untarFolder = `${distFolder}/${asset.name.replace('.tar.gz', '')}`
+const downloadAsset = (asset) => {
+  const distFolder = `${__dirname}/dist`;
+  const untarFolder = `${distFolder}/${asset.name.replace(".tar.gz", "")}`;
 
   exec(
     `
@@ -35,38 +47,63 @@ const downloadAsset = asset => {
     mv ${untarFolder}/fd ${distFolder}/fd && \
     rm -rf ${untarFolder} ${distFolder}/download.tar.gz
   `,
-    error => {
+    (error) => {
       if (error) {
-        throw error
+        throw error;
       }
     }
-  )
+  );
+};
+
+async function checkRequirements() {
+  const requiredCommands = ["wget", "tar"];
+  const missingCommands = [];
+
+  (await Promise.all(requiredCommands.map(commandExists))).filter(
+    (exists, index) => {
+      if (!exists) missingCommands.push(requiredCommands[index]);
+    }
+  );
+
+  if (missingCommands.length > 0) {
+    throw new Error(
+      `Missing required commands: ${missingCommands.join(", ")}.`
+    );
+  }
+
+  if (await commandExists("fd")) {
+    throw new Error(
+      `Command 'fd' already exists in your $PATH, so nothing will be installed.`
+    );
+  }
 }
 
-const req = request(
-  {
-    hostname: 'api.github.com',
-    path: '/repos/sharkdp/fd/releases/latest',
-    method: 'GET',
-    headers: {
-      'User-Agent':
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36',
-      Accept:
-        'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3'
+function main() {
+  const req = request(
+    {
+      hostname: "api.github.com",
+      path: "/repos/sharkdp/fd/releases/latest",
+      method: "GET",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+      },
+    },
+    (res) => {
+      let data = "";
+
+      res.on("data", (_) => (data += _));
+      res.on("end", (_) => {
+        let { assets } = JSON.parse(data);
+        const asset = chooseAsset(assets);
+        downloadAsset(asset);
+      });
     }
-  },
-  res => {
-    let data = ''
+  );
+  req.on("error", console.log);
+  req.end();
+}
 
-    res.on('data', _ => (data += _))
-    res.on('end', _ => {
-      let { assets } = JSON.parse(data)
-      const asset = chooseAsset(assets)
-      downloadAsset(asset)
-    })
-  }
-)
-
-req.on('error', console.log)
-
-req.end()
+checkRequirements().then(main);
