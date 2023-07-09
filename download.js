@@ -67,11 +67,12 @@ async function checkRequirements() {
   const requiredCommands = ["wget", "tar"];
   const missingCommands = [];
 
-  (await Promise.all(requiredCommands.map(commandExists))).filter(
-    (exists, index) => {
-      if (!exists) missingCommands.push(requiredCommands[index]);
-    }
+  const existsArr = await Promise.all(
+    requiredCommands.map(cmd => commandExists(cmd))
   );
+  existsArr.forEach((exists, i) => {
+    if (!exists) missingCommands.push(requiredCommands[i]);
+  });
 
   if (missingCommands.length > 0) {
     throw new Error(
