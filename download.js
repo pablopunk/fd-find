@@ -71,12 +71,6 @@ async function checkRequirements() {
       `Missing required commands: ${missingCommands.join(", ")}.`
     );
   }
-
-  if (await commandExists("fd")) {
-    throw new Error(
-      `Command 'fd' already exists in your $PATH, so nothing will be installed.`
-    );
-  }
 }
 
 function main() {
