@@ -12,6 +12,10 @@ const platformFiles = {
   darwin: "apple-darwin",
 };
 
+if (!platformFiles.hasOwnProperty(platform)) {
+  throw new Error(`platform '${platform}' is not yet supported by this script`);
+}
+
 const commandExists = async cmd => {
   return await exec_promise(`command -v '${cmd}'`)
     .catch(_ => false)
@@ -24,10 +28,6 @@ const commandExists = async cmd => {
 };
 
 const chooseAsset = assets => {
-  if (!platformFiles.hasOwnProperty(platform)) {
-    throw new Error(`Couldn't find any asset for platform '${platform}'`);
-  }
-
   const asset = assets.find(_ => _.name.includes(platformFiles[platform]));
 
   if (!asset) {
