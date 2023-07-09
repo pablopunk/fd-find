@@ -82,31 +82,35 @@ async function checkRequirements() {
 }
 
 function main() {
-  const req = request(
-    {
-      hostname: "api.github.com",
-      path: "/repos/sharkdp/fd/releases/latest",
-      method: "GET",
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
-        Accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
-      },
+  const requestOptions = {
+    hostname: "api.github.com",
+    path: "/repos/sharkdp/fd/releases/latest",
+    method: "GET",
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
+      Accept:
+        "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
     },
-    res => {
-      let data = "";
+  };
+  const req = request(requestOptions, res => {
+    let data = "";
 
-      res.on("data", _ => (data += _));
-      res.on("end", _ => {
-        let { assets } = JSON.parse(data);
-        const asset = chooseAsset(assets);
-        downloadAsset(asset);
-      });
-    }
-  );
-  req.on("error", console.log);
+    res.on("data", _ => (data += _));
+    res.on("end", _ => {
+      if (res.statusCode !== 200) {
+        throw new Error(`Request failed with status code ${res.statusCode}`);
+      }
+      const obj = JSON.parse(data);
+      if (!obj || !Array.isArray(obj.assets)) {
+        throw new Error("no assets found in response");
+      }
+      const asset = chooseAsset(obj.assets);
+      downloadAsset(asset);
+    });
+  });
+  req.on("error", console.error);
   req.end();
 }
 
-checkRequirements().then(main);
+checkRequirements().then(() => main());
