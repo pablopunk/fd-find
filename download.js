@@ -38,29 +38,31 @@ const chooseAsset = assets => {
   return asset;
 };
 
+function runCommand(cmd, args, options) {
+  const res = spawnSync(cmd, args, { stdio: "inherit", ...(options || {}) });
+  if (res.status !== 0)
+    throw new Error(`${cmd} failed with exit code ${res.status}`);
+  return res;
+}
+
 const downloadAsset = asset => {
   const distFolder = path.resolve(__dirname, `dist`);
   const untarFolder = path.join(distFolder, asset.name.replace(".tar.gz", ""));
   const tarDest = path.join(distFolder, `download.tar.gz`);
 
   // These throw when they fail
-  spawnSync("mkdir", { args: ["-p", "--", distFolder] });
-  spawnSync("wget", {
-    args: ["-O", tarDest, "--", asset.browser_download_url],
-  });
-  spawnSync("tar", {
+  runCommand("mkdir", ["-p", "--", distFolder]);
+  runCommand("wget", ["-qO", tarDest, "--", asset.browser_download_url]);
+  runCommand("tar", ["xzf", tarDest], {
     cwd: distFolder, // Run in the distFolder so it outputs to the right place
-    args: ["xzf", tarDest],
   });
-  spawnSync("mv", {
-    args: [
-      "-f",
-      "--",
-      path.join(untarFolder, "fd"),
-      path.join(distFolder, "fd"),
-    ],
-  });
-  spawnSync("rm", { args: ["-rf", "--", untarFolder, tarDest] });
+  runCommand("mv", [
+    "-f",
+    "--",
+    path.join(untarFolder, "fd"),
+    path.join(distFolder, "fd"),
+  ]);
+  spawnSync("rm", ["-rf", "--", untarFolder, tarDest]);
 };
 
 async function checkRequirements() {
