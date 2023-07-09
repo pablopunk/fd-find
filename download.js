@@ -19,13 +19,13 @@ if (!platformFiles.hasOwnProperty(platform)) {
 
 const commandExists = async cmd => {
   return await exec_promise(`command -v '${cmd}'`)
-    .catch(_ => false)
     .then(({ stdout }) =>
       fs
         .access(stdout.trim(), fs.constants.X_OK)
         .then(_ => true)
         .catch(_ => false)
-    );
+    )
+    .catch(_ => false);
 };
 
 const chooseAsset = assets => {
