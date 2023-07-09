@@ -109,7 +109,12 @@ function main() {
       downloadAsset(asset);
     });
   });
-  req.on("error", console.error);
+  req.on("error", e => {
+    console.error(e);
+    console.error(
+      "Error while downloading asset list. Please check your internet connection."
+    );
+  });
   req.end();
 }
 
