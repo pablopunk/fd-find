@@ -1,8 +1,9 @@
 const { request } = require("https");
 const os = require("os");
+const path = require("path");
 const fs = require("fs/promises");
 const util = require("util");
-const { exec } = require("child_process");
+const { exec, spawnSync } = require("child_process");
 const exec_promise = util.promisify(exec);
 
 const platform = os.platform();
@@ -38,23 +39,28 @@ const chooseAsset = assets => {
 };
 
 const downloadAsset = asset => {
-  const distFolder = `${__dirname}/dist`;
-  const untarFolder = `${distFolder}/${asset.name.replace(".tar.gz", "")}`;
+  const distFolder = path.resolve(__dirname, `dist`);
+  const untarFolder = path.join(distFolder, asset.name.replace(".tar.gz", ""));
+  const tarDest = path.join(distFolder, `download.tar.gz`);
 
-  exec(
-    `
-    mkdir -p ${distFolder} && \
-    wget ${asset.browser_download_url} -O ${distFolder}/download.tar.gz && \
-    tar xzf ${distFolder}/download.tar.gz -C ${distFolder}/ && \
-    mv ${untarFolder}/fd ${distFolder}/fd && \
-    rm -rf ${untarFolder} ${distFolder}/download.tar.gz
-  `,
-    error => {
-      if (error) {
-        throw error;
-      }
-    }
-  );
+  // These throw when they fail
+  spawnSync("mkdir", { args: ["-p", "--", distFolder] });
+  spawnSync("wget", {
+    args: ["-O", tarDest, "--", asset.browser_download_url],
+  });
+  spawnSync("tar", {
+    cwd: distFolder, // Run in the distFolder so it outputs to the right place
+    args: ["xzf", tarDest],
+  });
+  spawnSync("mv", {
+    args: [
+      "-f",
+      "--",
+      path.join(untarFolder, "fd"),
+      path.join(distFolder, "fd"),
+    ],
+  });
+  spawnSync("rm", { args: ["-rf", "--", untarFolder, tarDest] });
 };
 
 async function checkRequirements() {
