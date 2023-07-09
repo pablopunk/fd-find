@@ -13,10 +13,6 @@ const platformFiles = {
   darwin: "apple-darwin",
 };
 
-if (!platformFiles.hasOwnProperty(platform)) {
-  throw new Error(`platform '${platform}' is not yet supported by this script`);
-}
-
 const commandExists = async cmd => {
   return await exec_promise(`command -v '${cmd}'`)
     .then(({ stdout }) =>
@@ -66,6 +62,12 @@ const downloadAsset = asset => {
 };
 
 async function checkRequirements() {
+  if (!platformFiles.hasOwnProperty(platform)) {
+    throw new Error(
+      `platform '${platform}' is not yet supported by this script`
+    );
+  }
+
   const requiredCommands = ["wget", "tar"];
   const missingCommands = [];
 
