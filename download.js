@@ -13,21 +13,22 @@ const platformFiles = {
 };
 
 const commandExists = async cmd => {
-	return await exec_promise(`command -v '${cmd}'`)
+  return await exec_promise(`command -v '${cmd}'`)
     .catch(_ => false)
-    .then(({stdout}) => fs.access(stdout.trim(), fs.constants.X_OK)
+    .then(({ stdout }) =>
+      fs
+        .access(stdout.trim(), fs.constants.X_OK)
         .then(_ => true)
         .catch(_ => false)
-    )
+    );
 };
 
-
-const chooseAsset = (assets) => {
+const chooseAsset = assets => {
   if (!platformFiles.hasOwnProperty(platform)) {
     throw new Error(`Couldn't find any asset for platform '${platform}'`);
   }
 
-  const asset = assets.find((_) => _.name.includes(platformFiles[platform]));
+  const asset = assets.find(_ => _.name.includes(platformFiles[platform]));
 
   if (!asset) {
     throw new Error(`Couldn't find any asset for platform '${platform}'`);
@@ -36,7 +37,7 @@ const chooseAsset = (assets) => {
   return asset;
 };
 
-const downloadAsset = (asset) => {
+const downloadAsset = asset => {
   const distFolder = `${__dirname}/dist`;
   const untarFolder = `${distFolder}/${asset.name.replace(".tar.gz", "")}`;
 
@@ -48,7 +49,7 @@ const downloadAsset = (asset) => {
     mv ${untarFolder}/fd ${distFolder}/fd && \
     rm -rf ${untarFolder} ${distFolder}/download.tar.gz
   `,
-    (error) => {
+    error => {
       if (error) {
         throw error;
       }
@@ -86,11 +87,11 @@ function main() {
           "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
       },
     },
-    (res) => {
+    res => {
       let data = "";
 
-      res.on("data", (_) => (data += _));
-      res.on("end", (_) => {
+      res.on("data", _ => (data += _));
+      res.on("end", _ => {
         let { assets } = JSON.parse(data);
         const asset = chooseAsset(assets);
         downloadAsset(asset);
