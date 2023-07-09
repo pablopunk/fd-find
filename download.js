@@ -113,4 +113,10 @@ function main() {
   req.end();
 }
 
-checkRequirements().then(() => main());
+try {
+  checkRequirements().then(() => main());
+} catch (e) {
+  process.exitCode = 1;
+  if (e instanceof Error) console.error(e.message);
+  else console.error(e);
+}
