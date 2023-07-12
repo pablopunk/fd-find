@@ -85,7 +85,7 @@ async function checkRequirements() {
   }
 }
 
-function main() {
+function installFd() {
   const requestOptions = {
     hostname: "api.github.com",
     path: "/repos/sharkdp/fd/releases/latest",
@@ -122,13 +122,13 @@ function main() {
   req.end();
 }
 
-(async function () {
-  try {
-    await checkRequirements();
-    main();
-  } catch (e) {
-    process.exitCode = 1;
-    if (e instanceof Error) console.error(e.message);
-    else console.error(e);
-  }
-})();
+async function main() {
+  await checkRequirements();
+  installFd();
+}
+
+main().catch(e => {
+  process.exitCode = 1;
+  if (e instanceof Error) console.error(e.message);
+  else console.error(e);
+});
