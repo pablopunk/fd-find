@@ -1,6 +1,9 @@
 const { request } = require("https");
 const os = require("os");
+const fs = require("fs/promises");
+const util = require("util");
 const { exec } = require("child_process");
+const exec_promise = util.promisify(exec);
 
 const platform = os.platform();
 
@@ -9,17 +12,15 @@ const platformFiles = {
   darwin: "apple-darwin",
 };
 
-const commandExists = (cmd) => {
-  return new Promise((resolve, _reject) => {
-    exec(
-      `command -v ${cmd} >/dev/null 2>&1 || { echo >&2 "false"; }`,
-      (error, _stdout, stderr) => {
-        const exists = stderr.trim() !== "false" && !error;
-        resolve(exists);
-      }
-    );
-  });
+const commandExists = async cmd => {
+	return await exec_promise(`command -v '${cmd}'`)
+    .catch(_ => false)
+    .then(({stdout}) => fs.access(stdout.trim(), fs.constants.X_OK)
+        .then(_ => true)
+        .catch(_ => false)
+    )
 };
+
 
 const chooseAsset = (assets) => {
   if (!platformFiles.hasOwnProperty(platform)) {
@@ -68,12 +69,6 @@ async function checkRequirements() {
   if (missingCommands.length > 0) {
     throw new Error(
       `Missing required commands: ${missingCommands.join(", ")}.`
-    );
-  }
-
-  if (await commandExists("fd")) {
-    throw new Error(
-      `Command 'fd' already exists in your $PATH, so nothing will be installed.`
     );
   }
 }
