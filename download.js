@@ -64,7 +64,7 @@ const downloadAsset = asset => {
 async function checkRequirements() {
   if (!platformFiles.hasOwnProperty(platform)) {
     throw new Error(
-      `platform '${platform}' is not yet supported by this script`
+      `Platform '${platform}' is not yet supported by this tool. Feel free to open an issue on https://github.com/pablopunk/fd-find/issues`
     );
   }
 
